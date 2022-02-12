@@ -1,4 +1,5 @@
-export const message = 'Hello vue!';
-export const data = {
-  message,
+const data = {
+  message: 'Hello vue',
 };
+
+export default data;
