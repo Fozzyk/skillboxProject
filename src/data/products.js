@@ -1,18 +1,18 @@
 export default [
   {
-    title: 'Hasbro Nerf Нерф Бластер E2.0. Турбина',
-    price: 5790,
-    image: '/img/E9481.jpg',
+    title: 'HALO Фигурка героя Brute Captain 3.75" с аксессуарами',
+    price: 1299,
+    image: '/img/HLW0006.jpg',
   },
   {
-    title: 'Hasbro Nerf Игровой набор Hasbro Nerf Нерф FN B AR',
-    price: 6190,
-    image: '/img/F2344.jpg',
+    title: 'HALO Фигурка героя Spartan MK. VII 3.75" с аксессуарами',
+    price: 1299,
+    image: '/img/HLW0007.jpg',
   },
   {
-    title: 'Hasbro Nerf E6717 Бластер Нерф Фортнайт Спрингер',
-    price: 2190,
-    image: '/img/E6717.jpg',
+    title: 'HALO Фигурка героя H&V-1 3.75" с аксессуарами',
+    price: 2690,
+    image: '/img/HLW0009.jpg',
   },
   {
     title: 'Радионяня Motorola MBP16',
