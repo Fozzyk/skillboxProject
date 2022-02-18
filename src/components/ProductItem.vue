@@ -1,9 +1,8 @@
 <template>
-        <ul>
+        <ul class="colors colors--black">
             <a class="catalog__pic" href="#">
               <img v-bind:src="product.image" :alt="product.title">
             </a>
-
             <h3 class="catalog__title">
               <a href="#">
                 {{ product.title }}
@@ -12,7 +11,6 @@
             <span class="catalog__price">
               {{ product.price }} ₽
             </span>
-            <ul class="colors colors--black">
               <li class="colors__item">
                 <label class="colors__label">
         <input class="colors__radio sr-only" type="radio" name="color-1" value="#73B6EA" checked="">
@@ -27,7 +25,6 @@
                   </span>
                 </label>
               </li>
-              </ul>
               <li class="colors__item">
                 <label class="colors__label">
                   <input class="colors__radio sr-only" type="radio" name="color-1" value="#222">

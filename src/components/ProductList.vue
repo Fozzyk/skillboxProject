@@ -3,7 +3,6 @@
      <li class="catalog__item" v-for="(product, index) in products" :key="index">
 
       <ProductItem :product="product" />
-
       </li>
     </ul>
 </template>
