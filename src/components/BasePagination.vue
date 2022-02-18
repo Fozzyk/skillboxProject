@@ -8,34 +8,11 @@
               </svg>
             </a>
           </li>
-          <li class="pagination__item">
-            <a class="pagination__link pagination__link--current">
-              1
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link" href="#">
-              2
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link" href="#">
-              3
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link" href="#">
-              4
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link" href="#">
-              ...
-            </a>
-          </li>
-          <li class="pagination__item">
-            <a class="pagination__link" href="#">
-              10
+          <li class="pagination__item" v-for="pageNumber in pages" :key="pageNumber">
+<a href="#" class="pagination__link"
+:class="{'pagination__link--current': pageNumber === page}"
+@click="$event.preventDefault(); paginate(pageNumber)">
+              {{ pageNumber }}
             </a>
           </li>
           <li class="pagination__item">
@@ -50,6 +27,20 @@
 
 <script>
 export default {
+  model: {
+    prop: 'page',
+    event: 'paginate',
+  },
   props: ['page', 'count', 'perPage'],
+  computed: {
+    pages() {
+      return Math.ceil(this.count / this.perPage);
+    },
+  },
+  methods: {
+    paginate(page) {
+      this.$emit('paginate', page);
+    },
+  },
 };
 </script>
