@@ -10,7 +10,8 @@
     </div>
 
     <div class="content__catalog">
-      <ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo" :category-id.sync="FilterCategoryId" />
+      <ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo"
+      :category-id.sync="FilterCategoryId" />
            <section class="catalog">
        <ProductList :products="products"></ProductList>
        <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage" />

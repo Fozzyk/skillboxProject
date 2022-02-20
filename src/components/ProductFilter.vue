@@ -6,11 +6,11 @@
           <fieldset class="form__block">
             <legend class="form__legend">Цена</legend>
             <label class="form__label form__label--price">
-              <input class="form__input" type="text" name="min-price" v-model="currentPriceFrom">
+              <input class="form__input" type="text" name="min-price" v-model.number="currentPriceFrom">
               <span class="form__value">От</span>
             </label>
             <label class="form__label form__label--price">
-              <input class="form__input" type="text" name="max-price" v-model="currentPriceTo">
+              <input class="form__input" type="text" name="max-price" v-model.number="currentPriceTo">
               <span class="form__value">До</span>
             </label>
           </fieldset>
@@ -18,9 +18,10 @@
           <fieldset class="form__block">
             <legend class="form__legend">Категория</legend>
             <label class="form__label form__label--select">
-              <select class="form__select" type="text" name="category" v-model="currentCategoryId">
+              <select class="form__select" type="text" name="category" v-model.number="currentCategoryId">
                 <option value="0">Все категории</option>
-                <option :value="category.id" v-for="category in categories" :key="category.id">{{ category.title }}</option>
+                <option :value="category.id" v-for="category in categories"
+                :key="category.id">{{ category.title }}</option>
               </select>
             </label>
           </fieldset>
@@ -141,7 +142,7 @@
           <button class="filter__submit button button--primery" type="submit">
             Применить
           </button>
-          <button class="filter__reset button button--second" type="button">
+          <button class="filter__reset button button--second" type="button" @click.prevent="reset">
             Сбросить
           </button>
         </form>
@@ -149,7 +150,6 @@
       </template>
 
 <script>
-import { set } from 'vue/types/umd';
 
 import categories from '../data/categories';
 
@@ -159,7 +159,7 @@ export default {
       currentPriceFrom: 0,
       currentPriceTo: 0,
       currentCategoryId: 0,
-    }
+    };
   },
   props: ['priceFrom', 'priceTo', 'categoryId'],
   computed: {
@@ -167,12 +167,28 @@ export default {
       return categories;
     },
   },
+  watch: {
+    priceFrom(value) {
+      this.currentPriceFrom = value;
+    },
+    priceTo(value) {
+      this.currentPriceTo = value;
+    },
+    categoryId(value) {
+      this.currentCategoryId = value;
+    },
+  },
   methods: {
     submit() {
       this.$emit('update:priceFrom', this.currentPriceFrom);
       this.$emit('update:priceTo', this.currentPriceTo);
       this.$emit('update:categoryId', this.currentCategoryId);
-    }
-  }
+    },
+    reset() {
+      this.$emit('update:priceFrom', 0);
+      this.$emit('update:priceTo', 0);
+      this.$emit('update:categoryId', 0);
+    },
+  },
 };
 </script>
