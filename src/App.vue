@@ -10,7 +10,7 @@
     </div>
 
     <div class="content__catalog">
-      <ProductFilter/>
+      <ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo" :category-id.sync="FilterCategoryId" />
            <section class="catalog">
        <ProductList :products="products"></ProductList>
        <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage" />
@@ -42,13 +42,13 @@ export default {
     filteredProducts() {
       let filteredProducts = products;
       if (this.filterPriceFrom > 0) {
-        filteredProducts = filteredProducts.filter(product => product.price > this.filterPriceFrom);
+        filteredProducts = filteredProducts.filter((product) => product.price > this.filterPriceFrom);
       }
       if (this.filterPriceTo > 0) {
-        filteredProducts = filteredProducts.filter(product => product.price < this.filterPriceTo);
+        filteredProducts = filteredProducts.filter((product) => product.price < this.filterPriceTo);
       }
       if (this.FilterCategoryId) {
-        filteredProducts = filteredProducts.filter(product => product.categoryId === this.FilterCategoryId);
+        filteredProducts = filteredProducts.filter((product) => product.categoryId === this.FilterCategoryId);
       }
       return filteredProducts;
     },
