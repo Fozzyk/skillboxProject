@@ -1,6 +1,6 @@
 <template>
         <ul class="colors colors--black">
-            <a class="catalog__pic" href="#">
+            <a class="catalog__pic" href="#" @click.prevent="$emit('gotoPage', 'product', {id: product.id})">
               <img v-bind:src="product.image" :alt="product.title">
             </a>
             <h3 class="catalog__title">
