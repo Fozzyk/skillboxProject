@@ -43,7 +43,7 @@
       "@typescript-eslint/no-shadow": ["off"],
       "max-len": [
         "error",
-        120
+        150
       ]
     }
   },
