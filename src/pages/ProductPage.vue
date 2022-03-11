@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="item__info">
-        <span class="item__code">{{ product.id }}</span>
+        <span class="item__code">Артикул: {{ product.id }}</span>
         <h2 class="item__title">
           {{ product.title }}
         </h2>
@@ -95,21 +95,7 @@
             </fieldset>
 
             <div class="item__row">
-              <div class="form__counter">
-                <button type="button" aria-label="Убрать один товар" @click.prevent="productAmount--">
-                  <svg width="12" height="12" fill="currentColor">
-                    <use xlink:href="#icon-minus"></use>
-                  </svg>
-                </button>
-
-                <input type="text" v-model.number="productAmount">
-
-                <button type="button" aria-label="Добавить один товар" @click.prevent="productAmount++">
-                  <svg width="12" height="12" fill="currentColor">
-                    <use xlink:href="#icon-plus"></use>
-                  </svg>
-                </button>
-              </div>
+  <FormCounter :amount.sync="productAmount" class="form__counter" />
 
               <button class="button button--primery" type="submit">
                 В корзину
@@ -189,8 +175,10 @@ import products from '@/data/products';
 import categories from '@/data/categories';
 import gotoPage from '@/helpers/gotoPage';
 import numberFormat from '@/helpers/numberFormat';
+import FormCounter from '@/components/FormCounter.vue';
 
 export default {
+  components: { FormCounter },
   data() {
     return {
       productAmount: 1,
