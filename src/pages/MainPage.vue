@@ -22,14 +22,14 @@
 </template>
 
 <script>
-
-import products from '@/data/products';
 import ProductList from '@/components/ProductList.vue';
 import BasePagination from '@/components/BasePagination.vue';
 import ProductFilter from '@/components/ProductFilter.vue';
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 export default {
-  name: 'App',
+  name: 'MainPage',
   components: { ProductList, BasePagination, ProductFilter },
   data() {
     return {
@@ -37,34 +37,63 @@ export default {
       filterPriceTo: 0,
       FilterCategoryId: 0,
       FilterColorId: 0,
+
       page: 1,
       productsPerPage: 3,
+
+      productsData: null,
     };
   },
   computed: {
-    filteredProducts() {
-      let filteredProducts = products;
-      if (this.filterPriceFrom > 0) {
-        filteredProducts = filteredProducts.filter((product) => product.price > this.filterPriceFrom);
-      }
-      if (this.filterPriceTo > 0) {
-        filteredProducts = filteredProducts.filter((product) => product.price < this.filterPriceTo);
-      }
-      if (this.FilterCategoryId) {
-        filteredProducts = filteredProducts.filter((product) => product.categoryId === this.FilterCategoryId);
-      }
-      if (this.FilterColorId) {
-        filteredProducts = filteredProducts.filter((product) => product.colorId === this.FilterColorId);
-      }
-      return filteredProducts;
-    },
     products() {
-      const offset = (this.page - 1) * this.productsPerPage;
-      return this.filteredProducts.slice(offset, offset + this.productsPerPage);
+      return this.productsData
+        ? this.productsData.items.map((product) => ({
+          ...product,
+          image: product.image.file.url,
+        }))
+        : [];
+      //      const offset = (this.page - 1) * this.productsPerPage;
+      //      return this.filteredProducts.slice(offset, offset + this.productsPerPage);
     },
     countProducts() {
-      return this.filteredProducts.length;
+      return this.productsData ? this.productsData.pagination.total : 0;
+      // return this.filteredProducts.length;
     },
+  },
+  methods: {
+    loadProducts() {
+      clearTimeout(this.loadProductsTimer);
+      this.loadProductsTimer = setTimeout(() => {
+        axios
+          .get(API_BASE_URL + '/api/products', {
+            params: {
+              page: this.page,
+              limit: this.productsPerPage,
+              categoryId: this.FilterCategoryId,
+              minPrice: this.filterPriceFrom,
+              maxPrice: this.filterPriceTo,
+            },
+          })
+          .then((response) => { this.productsData = response.data; });
+      }, 0);
+    },
+  },
+  watch: {
+    page() {
+      this.loadProducts();
+    },
+    filterPriceFrom() {
+      this.loadProducts();
+    },
+    filterPriceTo() {
+      this.loadProducts();
+    },
+    FilterCategoryId() {
+      this.loadProducts();
+    },
+  },
+  created() {
+    this.loadProducts();
   },
 };
 </script>
