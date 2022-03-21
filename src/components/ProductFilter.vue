@@ -113,7 +113,6 @@
 
 <script>
 import axios from 'axios';
-import colors from '../data/colors';
 import { API_BASE_URL } from '../config';
 
 export default {
@@ -125,6 +124,7 @@ export default {
       currentColorId: 0,
 
       categoriesData: null,
+      colorsData: null,
     };
   },
   props: ['priceFrom', 'priceTo', 'categoryId', 'colorId'],
@@ -133,7 +133,7 @@ export default {
       return this.categoriesData ? this.categoriesData.items : [];
     },
     colors() {
-      return colors;
+      return this.colorsData ? this.colorsData.items : [];
     },
   },
   watch: {
@@ -167,9 +167,14 @@ export default {
       axios.get(API_BASE_URL + '/api/productCategories')
         .then((response) => { this.categoriesData = response.data; });
     },
+    loadColors() {
+      axios.get(API_BASE_URL + '/api/colors')
+        .then((response) => { this.colorsData = response.data; });
+    },
   },
   created() {
     this.loadCategories();
+    this.loadColors();
   },
 };
 </script>

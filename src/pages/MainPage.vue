@@ -13,6 +13,12 @@
       <ProductFilter :price-from.sync="filterPriceFrom" :price-to.sync="filterPriceTo"
       :category-id.sync="FilterCategoryId" :color-id.sync="FilterColorId" />
            <section class="catalog">
+
+       <div v-if="productsLoading">Загрузка товаров...</div>
+       <div v-if="productsLoadingFailed">Произошла ошибка при загрузке товаров
+       <button @click.prevent="loadProducts">Попробовать ещё раз</button>
+       </div>
+
        <ProductList :products="products"
        @gotoPage="(pageName, pageParams) => $emit('gotoPage', pageName, pageParams)"></ProductList>
        <BasePagination v-model="page" :count="countProducts" :per-page="productsPerPage" />
@@ -39,42 +45,51 @@ export default {
       FilterColorId: 0,
 
       page: 1,
-      productsPerPage: 3,
+      productsPerPage: 6,
 
       productsData: null,
+      productsLoading: false,
+      productsLoadingFailed: false,
+
     };
   },
   computed: {
     products() {
-      return this.productsData
-        ? this.productsData.items.map((product) => ({
-          ...product,
-          image: product.image.file.url,
-        }))
+      return this.productsData ? this.productsData.items.map((product) => ({
+        ...product,
+        image: product.image.file.url,
+      }))
         : [];
       //      const offset = (this.page - 1) * this.productsPerPage;
       //      return this.filteredProducts.slice(offset, offset + this.productsPerPage);
     },
+
     countProducts() {
       return this.productsData ? this.productsData.pagination.total : 0;
       // return this.filteredProducts.length;
     },
   },
+
   methods: {
     loadProducts() {
+      this.productsLoading = true;
+      this.productsLoadingFailed = false;
       clearTimeout(this.loadProductsTimer);
       this.loadProductsTimer = setTimeout(() => {
         axios
-          .get(API_BASE_URL + '/api/products', {
+          .get(API_BASE_URL + '/api/products/', {
             params: {
               page: this.page,
               limit: this.productsPerPage,
               categoryId: this.FilterCategoryId,
               minPrice: this.filterPriceFrom,
               maxPrice: this.filterPriceTo,
+              colorId: this.FilterColorId,
             },
           })
-          .then((response) => { this.productsData = response.data; });
+          .then((response) => { this.productsData = response.data; })
+          .catch(() => { this.productsLoadingFailed = true; })
+          .then(() => { this.productsLoading = false; });
       }, 0);
     },
   },
@@ -91,9 +106,13 @@ export default {
     FilterCategoryId() {
       this.loadProducts();
     },
+    FilterColorId() {
+      this.loadProducts();
+    },
   },
   created() {
     this.loadProducts();
   },
 };
+
 </script>
