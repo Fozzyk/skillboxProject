@@ -13,15 +13,5 @@ import numberFormat from '@/helpers/numberFormat';
 export default {
   filters: { numberFormat },
   props: ['item'],
-  computed: {
-    amount: {
-      get() {
-        return this.item.amount;
-      },
-      set(value) {
-        this.$store.dispatch({ productId: this.item.productId, amount: value });
-      },
-    },
-  },
 };
 </script>
