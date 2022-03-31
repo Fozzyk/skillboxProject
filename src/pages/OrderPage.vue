@@ -8,9 +8,9 @@
           </a>
         </li>
         <li class="breadcrumbs__item">
-          <a class="breadcrumbs__link" href="cart.html">
+          <router-link class="breadcrumbs__link" :to="{name: 'cart'}">
             Корзина
-          </a>
+          </router-link>
         </li>
         <li class="breadcrumbs__item">
           <a class="breadcrumbs__link">
@@ -23,24 +23,24 @@
         Корзина
       </h1>
       <span class="content__info">
-        {{ totalAmount  }} товара
+        Количество товара: {{ totalAmount  }}
       </span>
     </div>
 
     <section class="cart">
-      <form class="cart__form form" action="#" method="POST">
+      <form class="cart__form form" action="#" method="POST" @submit.prevent="order">
         <div class="cart__field">
           <div class="cart__data">
 
-        <BaseFormText title="ФИО" v-model="formData.name" :error="formError.name" type="name" placeholder="Введите ваше полное имя" />
+        <BaseFormText title="ФИО" v-model="formData.name" :error="formError.name" placeholder="Введите ваше полное имя" />
 
-        <BaseFormText title="Адрес доставки" v-model="formData.address" :error="formError.address" type="address" placeholder="Введите ваш адрес" />
+        <BaseFormText title="Адрес доставки" v-model="formData.address" :error="formError.address" placeholder="Введите ваш адрес" />
 
         <BaseFormText title="Телефон" v-model="formData.phone" :error="formError.phone" type="tel" placeholder="Введите ваш телефон" />
 
         <BaseFormText title="Email" v-model="formData.email" :error="formError.email" type="email" placeholder="Введи ваш Email" />
 
-        <BaseFormTextArea title="Комментарий к заказу" v-model="formData.comments" :error="formError.comments" placeholder="Ваши пожелания"/>
+        <BaseFormTextArea title="Комментарий к заказу" v-model="formData.comment" :error="formError.comment" placeholder="Ваши пожелания"/>
           </div>
 
           <div class="cart__options">
@@ -58,7 +58,7 @@
                 <label class="options__label">
                   <input class="options__radio sr-only" type="radio" name="delivery" value="500">
                   <span class="options__value">
-                    Курьером <b>500 ₽</b>
+                    Курьером <b>Бесплатно ₽</b>
                   </span>
                 </label>
               </li>
@@ -92,18 +92,20 @@
           </ul>
 
           <div class="cart__total">
-            <p>Доставка: <b>500 ₽</b></p>
-            <p>Итого: <b>{{ totalAmount  }}</b> товара на сумму <b>{{ totalPrice | numberFormat }} ₽</b></p>
+            <p>Доставка: <b>Бесплатно ₽</b></p>
+            <p>Итого товаров: <b>{{ totalAmount  }}</b> на сумму <b>{{ totalPrice | numberFormat }} ₽</b></p>
           </div>
 
-          <button class="cart__button button button--primery" type="submit">
+          <button class="cart__button button button--primery" type="submit"  :disabled="orderLoading">
             Оформить заказ
           </button>
+       <Preloader v-if="orderLoading"/>
+       <div v-if="orderLoadingFailed">Произошла ошибка при оформлении заказа</div>
         </div>
-        <div class="cart__error form__error-block">
+        <div class="cart__error form__error-block" v-if="formErrorMessage">
           <h4>Заявка не отправлена!</h4>
           <p>
-            Похоже произошла ошибка. Попробуйте отправить снова или перезагрузите страницу.
+            {{ formErrorMessage }}
           </p>
         </div>
       </form>
@@ -116,11 +118,20 @@ import numberFormat from '@/helpers/numberFormat';
 import BaseFormText from '@/components/BaseFormText.vue';
 import BaseFormTextArea from '@/components/BaseFormTextArea.vue';
 import OrderItem from '@/components/OrderItem.vue';
+import Preloader from '@/data/Preloader.vue';
+import axios from 'axios';
 import { mapGetters } from 'vuex';
+import { API_BASE_URL } from '../config';
 
 export default {
+  name: 'OrderPage',
   filters: { numberFormat },
-  components: { BaseFormText, BaseFormTextArea, OrderItem },
+  components: {
+    BaseFormText,
+    BaseFormTextArea,
+    OrderItem,
+    Preloader,
+  },
   computed: {
     ...mapGetters({ products: 'cartDetailProducts', totalPrice: 'cartTotalPrice', totalAmount: 'cartTotalAmount' }),
 
@@ -129,7 +140,42 @@ export default {
     return {
       formData: {},
       formError: {},
+      formErrorMessage: '',
+
+      orderLoading: false,
+      orderLoadingFailed: false,
     };
+  },
+  methods: {
+    order() {
+      this.formError = {};
+      this.formErrorMessage = '';
+      this.orderLoading = true;
+      this.orderLoadingFailed = false;
+      clearTimeout(this.loadProductsTimer);
+      this.loadProductsTimer = setTimeout(() => {
+        axios
+          .post(API_BASE_URL + '/api/orders', {
+            ...this.formData,
+          }, {
+            params: {
+              userAccessKey: this.$store.state.userAccessKey,
+            },
+          })
+          .then((response) => {
+            this.$store.commit('resetCart');
+            this.$store.commit('updateOrderInfo', response.data);
+            this.$router.push({ name: 'orderInfo', params: { id: response.data.id } }, 0);
+          })
+          .catch((error) => {
+            this.formError = error.response.data.error.request || {};
+            this.formErrorMessage = error.response.data.error.message;
+          })
+          .then((response) => { this.formData = response.data; })
+          .catch(() => { this.orderLoadingFailed = true; })
+          .then(() => { this.orderLoading = false; });
+      }, 3000);
+    },
   },
 };
 

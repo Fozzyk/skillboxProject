@@ -1,7 +1,7 @@
 <template>
             <li class="cart__order">
               <h3>{{ item.product.title }}</h3>
-              <b>{{ (item.amount * item.product.price) | numberFormat }} ₽</b>
+              <b>{{ item.costAmount | numberFormat }} ₽</b>
               <span>Артикул: {{ item.product.id }}</span>
               <span>Количество: {{ item.amount }}</span>
             </li>

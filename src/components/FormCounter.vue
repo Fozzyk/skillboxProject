@@ -6,7 +6,7 @@
                   </svg>
                 </button>
 
-                <input type="num" v-model.number="productAmount" name="count">
+                <input type="button" v-model.number="productAmount" name="count">
 
                 <button type="button" aria-label="Добавить один товар" @click.prevent="productAmount++">
                   <svg width="12" height="12" fill="currentColor">

@@ -1,5 +1,5 @@
 <template>
-        <ul class="colors colors--black">
+        <ul>
             <router-link class="catalog__pic" :to="{name: 'product', params: {id: product.id}}">
               <img v-bind:src="product.image" :alt="product.title">
             </router-link>
@@ -11,7 +11,7 @@
             <span class="catalog__price">
               {{ product.price | numberFormat }} ₽
             </span>
-            <FormColor
+            <FormColor class="colors colors--black"
             :colors="product.colors" />
           </ul>
 </template>

@@ -18,7 +18,7 @@
         Корзина
       </h1>
       <span class="content__info">
-        {{ totalAmount  }} товара
+        Количество товара: {{ totalAmount  }}
       </span>
     </div>
 
@@ -53,6 +53,7 @@ import { mapGetters } from 'vuex';
 import CartItem from '@/components/CartItem.vue';
 
 export default {
+  name: 'cartPage',
   filters: { numberFormat },
   components: { CartItem },
   computed: {
