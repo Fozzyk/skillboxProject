@@ -19,7 +19,7 @@
         </li>
       </ul>
 
-      <h1 class="content__title">
+      <h1 class="content__title" v-if="orderInfo">
         Заказ оформлен <span>№{{ orderInfo.id }}</span>
       </h1>
     </div>
@@ -37,7 +37,7 @@
               <span class="dictionary__key">
                 Получатель
               </span>
-              <span class="dictionary__value">
+              <span class="dictionary__value" v-if="orderInfo">
                 {{ orderInfo.name }}
               </span>
             </li>
@@ -45,7 +45,7 @@
               <span class="dictionary__key">
                 Адрес доставки
               </span>
-              <span class="dictionary__value">
+              <span class="dictionary__value" v-if="orderInfo">
                  {{ orderInfo.address }}
               </span>
             </li>
@@ -53,7 +53,7 @@
               <span class="dictionary__key">
                 Телефон
               </span>
-              <span class="dictionary__value">
+              <span class="dictionary__value" v-if="orderInfo">
                 {{ orderInfo.phone }}
               </span>
             </li>
@@ -61,7 +61,7 @@
               <span class="dictionary__key">
                 Email
               </span>
-              <span class="dictionary__value">
+              <span class="dictionary__value" v-if="orderInfo">
                 {{ orderInfo.email }}
               </span>
             </li>
@@ -81,7 +81,7 @@
             <OrderItem  v-for="item in orderProducts" :key="item.productId" :item="item" />
           </ul>
 
-          <div class="cart__total">
+          <div class="cart__total" v-if="orderInfo">
             <p>Доставка: <b>Бесплатно ₽</b></p>
             <p>Итого товаров: <b>{{ orderInfo.totalAmount }}</b> на сумму <b>{{ orderInfo.totalPrice | numberFormat }} ₽</b></p>
           </div>

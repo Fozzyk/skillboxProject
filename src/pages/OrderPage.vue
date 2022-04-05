@@ -174,7 +174,7 @@ export default {
           .then((response) => { this.formData = response.data; })
           .catch(() => { this.orderLoadingFailed = true; })
           .then(() => { this.orderLoading = false; });
-      }, 3000);
+      }, 1000);
     },
   },
 };
